@@ -31,7 +31,7 @@ ai_model = st.sidebar.selectbox(
 )
 #--------------------------------------------------------------------------------------
 
-# todo: тарифы
+# todo: тарифы расчета стоимости
 TARIFFS = {
     "gold_price": {"375": 2000, "585": 3500, "750": 4500},
     "type_coefficient": {
@@ -57,8 +57,24 @@ with col1:
     item_type = st.selectbox("Тип изделия",
         ["Кольцо", "Серьги", "Браслет", "Кулон", "Цепь", "Колье"])
     purity = st.selectbox("Проба металла", ["375", "585", "750"])
-    weight = st.number_input("Вес (грамм)", min_value=0.1, max_value=500.0,
+
+    # чекбокс - нужно ли показывать поле веса
+    show_weight = st.checkbox("Указать вес изделия?")
+
+    # пустой контейнер
+    weight_container = st.empty()
+
+    # если чекбокс отмечен, добавляем поле ввода в контейнер
+    if show_weight:
+        weight = weight_container.number_input("Вес (грамм)", min_value=0.1, max_value=500.0,
                              value=3.5, step=0.1, help="Необязательное поле")
+    else:
+        # если не отмечен — очищаем контейнер (поле исчезает)
+        weight_container.empty()
+        weight = 1 # Значение по умолчанию, если поле скрыто
+
+    #weight = st.number_input("Вес (грамм)", min_value=0.1, max_value=500.0,
+    #                         value=3.5, step=0.1, help="Необязательное поле")
 
 with col2:
     has_inserts = st.selectbox("Наличие вставок", ["Да", "Нет"])
@@ -152,6 +168,7 @@ def analyze_jewelry_ai(image_bytes, user_data):
 def calculate_valuation(user_data, ai_data, weight):
     """Расчет по тарифным сеткам"""
 
+    #todo: если вес не указан
     # Базовая стоимость металла
     base_price = weight * TARIFFS["gold_price"][user_data["purity"]]
 
@@ -196,6 +213,12 @@ def calculate_valuation(user_data, ai_data, weight):
         "ai_details": ai_data
     }
 
+#-------------------------- выбор филиала ------------------------------------------------------------
+def choose_filial():
+    #st.write("Карта подразделений (в разработке)")
+    st.subheader("Выберите удобное подразделение")
+    return None
+
 #------------------------------- Кнопка анализа -------------------------------------------------
 if uploaded_file and st.button("Получить предварительную оценку", type="primary"):
 
@@ -228,6 +251,8 @@ if uploaded_file and st.button("Получить предварительную 
             col2.metric("Сумма выкупа", f"{result['redemption']} ₽")
             col3.metric("Вероятность принятия", result['probability'])
 
+            st.info(f"Расчет для веса {weight} г")
+
             # Детали AI
             with st.expander("Подробнее..."):
                 st.json(result['ai_details'])
@@ -241,12 +266,15 @@ if uploaded_file and st.button("Получить предварительную 
             col_a, col_b = st.columns(2)
 
             with col_a:
-                if st.button("️ Выбрать подразделение", use_container_width=True):
+                if st.button("️Выбрать подразделение", use_container_width=True):
+                    #choose_filial_result = choose_filial()
+                    choose_filial()
                     #st.write("Карта подразделений (в разработке)")
                     # todo: интеграция с картой
 
             with col_b:
                 if st.button("Заказать обратный звонок", use_container_width=True):
+                    choose_filial()
                     #st.write("### Форма обратного звонка")
                     #name = st.text_input("ФИО *")
                     #phone = st.text_input("Номер телефона *")

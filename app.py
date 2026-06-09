@@ -81,7 +81,7 @@ with col2:
     condition = st.selectbox("Состояние изделия",
         ["Как новое", "Среднее", "Плохое"])
 
-uploaded_file = st.file_uploader("Загрузите фото изделия (1-2 фото)",
+uploaded_file = st.file_uploader("Загрузите фото изделия",
                                   type=["jpg", "jpeg", "png"],
                                   accept_multiple_files=False)
 
@@ -92,7 +92,9 @@ if uploaded_file:
 def analyze_jewelry_ai(image_bytes, user_data):
     b64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-    prompt = f"""Ты эксперт-товаровед ломбарда. Проанализируй фото ювелирного изделия.
+    prompt = f"""Ты эксперт-товаровед ломбарда. Тебе нужно оценить примерную стоимость ювелирного изделия по фото.
+    Проанализируй фото ювелирного изделия.
+    Определи тип изделия на фото, наличие вставок, наличие дефектов. Если возможно, определи пробу металла.
 
     Пользователь указал:
     - Тип: {user_data['type']}
@@ -251,7 +253,7 @@ if uploaded_file and st.button("Получить предварительную 
             col2.metric("Сумма выкупа", f"{result['redemption']} ₽")
             col3.metric("Вероятность принятия", result['probability'])
 
-            st.info(f"Расчет для веса {weight} г")
+            st.info(f"Расчет приведен для веса {weight} г")
 
             # Детали AI
             with st.expander("Подробнее..."):
@@ -274,6 +276,7 @@ if uploaded_file and st.button("Получить предварительную 
 
             with col_b:
                 if st.button("Заказать обратный звонок", use_container_width=True):
+                    #todo
                     choose_filial()
                     #st.write("### Форма обратного звонка")
                     #name = st.text_input("ФИО *")

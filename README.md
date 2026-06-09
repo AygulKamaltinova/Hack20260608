@@ -36,4 +36,5 @@ python3 -m streamlit run app.py
 
 ### Контакты
 Айгуль Камалтинова
-t.me/aygul_kamaltinova
+
+[аккаунт telegram](t.me/aygul_kamaltinova)

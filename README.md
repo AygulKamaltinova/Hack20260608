@@ -32,8 +32,7 @@ echo "OPENROUTER_API_KEY=sk-or-v1-ваш_ключ" > .env
 python -m streamlit run app.py
 # или
 python3 -m streamlit run app.py
-
-```bash
+```
 
 ### Контакты
 Айгуль Камалтинова

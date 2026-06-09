@@ -33,6 +33,8 @@ python -m streamlit run app.py
 # или
 python3 -m streamlit run app.py
 
+```bash
+
 ### Контакты
 Айгуль Камалтинова
 t.me/aygul_kamaltinova
